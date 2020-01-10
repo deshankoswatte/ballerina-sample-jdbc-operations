@@ -1,108 +1,105 @@
 import ballerina/io;
 import ballerinax/java.jdbc;
 
+// JDBC Client for MySQL database. This client can be used with any JDBC
+// supported database by providing the corresponding JDBC URL.
+// jdbc:Client testDB = new ({
+//    url: "jdbc:mysql://localhost:3306/demodb",
+//    username: "root",
+//    password: "password",
+//    dbOptions: {useSSL: false}
+// });
+
+// JDBC Client for H2 database.
 jdbc:Client testDB = new ({
-    url: "jdbc:mysql://localhost:3306/testdb",
+    url: "jdbc:h2:file:./db_files/demodb",
     username: "test",
-    password: "test",
-    dbOptions: {useSSL: false}
+    password: "test"
 });
 
 type Student record {
-    int id;
-    int age;
-    string name;
+    int id?;
+    string fullName?;
+    int age?;
+    string address?;
 };
 
 public function main() {
 
-    io:println("The update operation - Creating table and procedures:");
-    var ret = testDB->update("CREATE TABLE student(id INT AUTO_INCREMENT, " +
-        "age INT, name VARCHAR(255), PRIMARY KEY (id))");
-    handleUpdate(ret, "Create student table");
+}
 
-    ret = testDB->update("CREATE PROCEDURE INSERTDATA(IN pAge INT, " +
-        "IN pName VARCHAR(255)) " +
-        "BEGIN " +
-        "INSERT INTO student(age, name) VALUES (pAge, pName); " +
-        "END");
-    handleUpdate(ret, "Stored procedure with IN param creation");
+function createTable() {
 
-    ret = testDB->update("CREATE PROCEDURE GETCOUNT (INOUT pID INT, " +
-        "OUT pCount INT) " +
-        "BEGIN " +
-        "SELECT id INTO pID FROM student WHERE age = pID; " +
-        "SELECT COUNT(*) INTO pCount FROM student " +
-        "WHERE age = 20; " +
-        "END");
-    handleUpdate(ret, "Stored procedure with INOUT/OUT param creation");
+    // Create the table.
+    var ret = testDB->update("CREATE TABLE STUDENT (ID INTEGER, FULLNAME VARCHAR(50), AGE INTEGER, ADDRESS VARCHAR(100))");
+    handleUpdate(ret, "Create STUDENT table");
+}
 
-    ret = testDB->update("CREATE PROCEDURE GETSTUDENTS() " +
-        "BEGIN SELECT * FROM student; END");
-    handleUpdate(ret, "Stored procedure with result set return");
+function gellAllStudents() returns @tainted table<Student>{
 
-    io:println("\nThe call operation - With IN params");
-
-    var retCall = testDB->call("{CALL INSERTDATA(?,?)}", (), 20, "George");
-    if (retCall is error) {
-        io:println("Stored procedure call failed: ",
-                    <string>retCall.detail()?.message);
+    // Retrieving data from table.
+    var selectRet = testDB->select("SELECT * FROM STUDENT", Student);
+    if (selectRet is table<Student>) {
+        return selectRet;   
     } else {
-        io:println("Call operation with IN params successful");
+        error err = error("Record is nil");
+        panic err;
     }
+}
 
-    io:println("\nThe call operation - With INOUT/OUT params");
+function getStudent(int id) returns @tainted Student {
 
-    jdbc:Parameter pId = {
-        sqlType: jdbc:TYPE_INTEGER,
-        value: 20,
-        direction: jdbc:DIRECTION_INOUT
-    };
-    jdbc:Parameter pCount = {
-        sqlType: jdbc:TYPE_INTEGER,
-        direction: jdbc:DIRECTION_OUT
-    };
-
-    retCall = testDB->call("{CALL GETCOUNT(?,?)}", (), pId, pCount);
-    if (retCall is error) {
-        io:println("Stored procedure call failed: ",
-                    <string>retCall.detail()?.message);
+    // Retrieving data from table.
+    Student student = {};
+    var selectRet = testDB->select("SELECT * FROM STUDENT WHERE id = ?", Student, id);
+    if (selectRet is table<Student>) {
+        if (selectRet.hasNext()) {
+            return selectRet.getNext();
+        } else {
+            return student;
+        } 
     } else {
-        io:println("Call operation with INOUT and OUT params successful");
-        io:println("Student ID of the student with age of 20: ", pId.value);
-        io:println("Student count with age of 20: ", pCount.value);
+        panic error("Record is nil");
     }
+}
 
-    retCall = testDB->call("{CALL GETSTUDENTS()}", [Student]);
-    if (retCall is error) {
-        io:println("Stored procedure call failed: ",
-                    <string>retCall.detail()?.message);
+function insertStudent(int id, string fullName, int age, string address) {
 
-    } else if retCall is table<record {}>[] {
-        table<Student> studentTable = retCall[0];
-        io:println("Data in students table:");
-        foreach var row in studentTable {
-            io:println(row);
-        }
-    } else {
-        io:println("Call operation is not returning data");
-    }
+    // Insert data row to the table
+    var ret = testDB->update("INSERT INTO STUDENT (ID, FULLNAME, AGE, ADDRESS) VALUES (?, ?, ?, ?)", id, fullName, age, address);
+    handleUpdate(ret, "Insert data to STUDENT table");
+}
 
-    io:println("\nThe update operation - Drop the tables and procedures");
-    ret = testDB->update("DROP TABLE student");
-    handleUpdate(ret, "Drop table student");
+function updateStudent(int id, string fullName, int age, string address) {
 
-    ret = testDB->update("DROP PROCEDURE INSERTDATA");
-    handleUpdate(ret, "Drop stored procedure INSERTDATA");
+    // Update data row in the table
+    var ret = testDB->update("UPDATE STUDENT SET fullName = ?, age = ?, address = ? WHERE ID = ?", fullName, age, address, id);
+    handleUpdate(ret, "Update data in STUDENT table");
+}
 
-    ret = testDB->update("DROP PROCEDURE GETCOUNT");
-    handleUpdate(ret, "Drop stored procedure GETCOUNT");
+function deleteStudent(int id) {
 
-    ret = testDB->update("DROP PROCEDURE GETSTUDENTS");
-    handleUpdate(ret, "Drop stored procedure GETSTUDENTS");
+    // Delete data row in the table
+    var ret = testDB->update("DELETE FROM STUDENT WHERE ID = ?", id);
+    handleUpdate(ret, "Delete data in STUDENT table");    
+}
+
+function truncateTable() {
+
+    // Delete data row in the table
+    var ret = testDB->update("TRUNCATE TABLE STUDENT");
+    handleUpdate(ret, "Truncate STUDENT table");  
+}
+
+function dropStudentTable() {
+
+    // Drop the table
+    var ret = testDB->update("DROP TABLE STUDENT");
+    handleUpdate(ret, "Drop STUDENT table");  
 }
 
 function handleUpdate(jdbc:UpdateResult|jdbc:Error returned, string message) {
+
     if (returned is jdbc:UpdateResult) {
         io:println(message, " status: ", returned.updatedRowCount);
     } else {

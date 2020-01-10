@@ -11,6 +11,86 @@ http:Client clientEP = new("http://localhost:9090");
 service studentService on new http:Listener(9090) {
 
     @http:ResourceConfig {
+        methods: ["GET"],
+        path: "/getAllStudents"
+    }
+    resource function getAllStudents(http:Caller caller, http:Request req) {
+
+        mime:Entity jsonBodyPart = new;
+        jsonBodyPart.setContentDisposition(
+                        getContentDispositionForFormData("json part"));
+        jsonBodyPart.setJson({"name": "wso2"});
+
+        mime:Entity xmlFilePart = new;
+        xmlFilePart.setContentDisposition(
+                       getContentDispositionForFormData("xml file part"));
+
+        xmlFilePart.setFileAsEntityBody("./files/test.xml",
+                                        contentType = mime:APPLICATION_XML);
+
+        mime:Entity[] bodyParts = [jsonBodyPart, xmlFilePart];
+        http:Request request = new;
+
+        request.setBodyParts(bodyParts, contentType = mime:MULTIPART_FORM_DATA);
+        var returnResponse = clientEP->post("/multiparts/decode", request);
+        if (returnResponse is http:Response) {
+            var result = caller->respond(returnResponse);
+            if (result is error) {
+                log:printError("Error sending response", err = result);
+            }
+        } else {
+            http:Response response = new;
+            response.setPayload("Error occurred while sending multipart " +
+                                    "request!");
+            response.statusCode = 500;
+            var result = caller->respond(response);
+            if (result is error) {
+                log:printError("Error sending response", err = result);
+            }
+        }
+    }
+
+    @http:ResourceConfig {
+        methods: ["GET"],
+        path: "/getStudent"
+    }
+    resource function getStudent(http:Caller caller, http:Request req) {
+
+        mime:Entity jsonBodyPart = new;
+        jsonBodyPart.setContentDisposition(
+                        getContentDispositionForFormData("json part"));
+        jsonBodyPart.setJson({"name": "wso2"});
+
+        mime:Entity xmlFilePart = new;
+        xmlFilePart.setContentDisposition(
+                       getContentDispositionForFormData("xml file part"));
+
+        xmlFilePart.setFileAsEntityBody("./files/test.xml",
+                                        contentType = mime:APPLICATION_XML);
+
+        mime:Entity[] bodyParts = [jsonBodyPart, xmlFilePart];
+        http:Request request = new;
+
+        request.setBodyParts(bodyParts, contentType = mime:MULTIPART_FORM_DATA);
+        var returnResponse = clientEP->post("/multiparts/decode", request);
+        if (returnResponse is http:Response) {
+            var result = caller->respond(returnResponse);
+            if (result is error) {
+                log:printError("Error sending response", err = result);
+            }
+        } else {
+            http:Response response = new;
+            response.setPayload("Error occurred while sending multipart " +
+                                    "request!");
+            response.statusCode = 500;
+            var result = caller->respond(response);
+            if (result is error) {
+                log:printError("Error sending response", err = result);
+            }
+        }
+    }
+
+    @http:ResourceConfig {
         methods: ["POST"],
         path: "/insertStudent"
     }
@@ -64,9 +144,9 @@ service studentService on new http:Listener(9090) {
 
     @http:ResourceConfig {
         methods: ["GET"],
-        path: "/encode"
+        path: "/deleteStudent"
     }
-    resource function multipartSender(http:Caller caller, http:Request req) {
+    resource function deleteStudent(http:Caller caller, http:Request req) {
 
         mime:Entity jsonBodyPart = new;
         jsonBodyPart.setContentDisposition(

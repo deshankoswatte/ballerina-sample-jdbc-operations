@@ -1,2 +1,2 @@
 # ballerina-boilerplate-jdbc-operations
-Ballerina boilerplate code tfor database crud operations
+Ballerina boilerplate code for database crud operations
