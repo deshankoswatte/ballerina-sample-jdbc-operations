@@ -17,7 +17,7 @@ jdbc:Client testDB = new ({
     password: "test"
 });
 
-type Student record {
+public type Student record {
     int id?;
     string fullName?;
     int age?;
@@ -25,17 +25,21 @@ type Student record {
 };
 
 public function main() {
-
+    createTable();
+    insertStudent(1, "Dehami Koswatte", 20, "Homagama");
+    insertStudent(2, "Vinula Buthgamumudalige", 20, "Dehiwala");
+    insertStudent(3, "Sanjula Maddurapperuma", 20, "Rajagiriya");
+    insertStudent(4, "Ihan Lelwala", 20, "Dehiwala");
 }
 
-function createTable() {
+public function createTable() {
 
     // Create the table.
     var ret = testDB->update("CREATE TABLE STUDENT (ID INTEGER, FULLNAME VARCHAR(50), AGE INTEGER, ADDRESS VARCHAR(100))");
     handleUpdate(ret, "Create STUDENT table");
 }
 
-function gellAllStudents() returns @tainted table<Student>{
+public function getAllStudents() returns @tainted table<Student>{
 
     // Retrieving data from table.
     var selectRet = testDB->select("SELECT * FROM STUDENT", Student);
@@ -47,7 +51,7 @@ function gellAllStudents() returns @tainted table<Student>{
     }
 }
 
-function getStudent(int id) returns @tainted Student {
+public function getStudent(int id) returns @tainted Student {
 
     // Retrieving data from table.
     Student student = {};
@@ -63,35 +67,35 @@ function getStudent(int id) returns @tainted Student {
     }
 }
 
-function insertStudent(int id, string fullName, int age, string address) {
+public function insertStudent(int id, string fullName, int age, string address) {
 
     // Insert data row to the table
     var ret = testDB->update("INSERT INTO STUDENT (ID, FULLNAME, AGE, ADDRESS) VALUES (?, ?, ?, ?)", id, fullName, age, address);
     handleUpdate(ret, "Insert data to STUDENT table");
 }
 
-function updateStudent(int id, string fullName, int age, string address) {
+public function updateStudent(int id, string fullName, int age, string address) {
 
     // Update data row in the table
     var ret = testDB->update("UPDATE STUDENT SET fullName = ?, age = ?, address = ? WHERE ID = ?", fullName, age, address, id);
     handleUpdate(ret, "Update data in STUDENT table");
 }
 
-function deleteStudent(int id) {
+public function deleteStudent(int id) {
 
     // Delete data row in the table
     var ret = testDB->update("DELETE FROM STUDENT WHERE ID = ?", id);
     handleUpdate(ret, "Delete data in STUDENT table");    
 }
 
-function truncateTable() {
+public function truncateTable() {
 
     // Delete data row in the table
     var ret = testDB->update("TRUNCATE TABLE STUDENT");
     handleUpdate(ret, "Truncate STUDENT table");  
 }
 
-function dropStudentTable() {
+public function dropStudentTable() {
 
     // Drop the table
     var ret = testDB->update("DROP TABLE STUDENT");
@@ -103,6 +107,6 @@ function handleUpdate(jdbc:UpdateResult|jdbc:Error returned, string message) {
     if (returned is jdbc:UpdateResult) {
         io:println(message, " status: ", returned.updatedRowCount);
     } else {
-        io:println(message, " failed: ", <string>returned.detail()?.message);
+        panic error(message + " failed: " + <string>returned.detail()?.message);
     }
 }
