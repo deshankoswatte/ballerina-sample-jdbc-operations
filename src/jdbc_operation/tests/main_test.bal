@@ -11,8 +11,8 @@ function beforeSuiteFunc() {
 # Before test function
 
 function beforeFunc() {
-    io:println("\nCreate the STUDENT table before function\n");
-    createTable();
+    io:println("\nCreate the STUDENTS table before function\n");
+    boolean|error tableCreationStatus = createTable();
 }
 
 # Test function
@@ -24,19 +24,20 @@ function testInsertion() {
 
     io:println("Running function testInsertion");
     io:println("====================================================================");
-    io:println("Adding data into the STUDENT table");
-    insertStudent(1, "Dehami Koswatte", 20, "Homagama");
-    insertStudent(2, "Vinula Buthgamumudalige", 20, "Dehiwala");
-    insertStudent(3, "Sanjula Maddurapperuma", 20, "Rajagiriya");
-    insertStudent(4, "Ihan Lelwala", 20, "Dehiwala");
-    insertStudent(5, "Shenal Mendis", 20, "Kottawa");
+    io:println("Adding data into the STUDENTS table");
 
-    io:println("\nTesting whether records are added to the STUDENT table\n");
-    test:assertTrue(getStudent(1)?.id == 1, msg = "Student with id 1 not found!");
-    test:assertTrue(getStudent(2)?.id == 2, msg = "Student with id 2 not found!");
-    test:assertTrue(getStudent(3)?.id == 3, msg = "Student with id 3 not found!");
-    test:assertTrue(getStudent(4)?.id == 4, msg = "Student with id 4 not found!");
-    test:assertTrue(getStudent(5)?.id == 5, msg = "Student with id 5 not found!");
+    boolean|error student_1_InsertionStatus = insertStudent(1, "Dehami Koswatte", 20, "Homagama");
+    boolean|error student_2_InsertionStatus = insertStudent(2, "Vinula Buthgamumudalige", 20, "Dehiwala");
+    boolean|error student_3_InsertionStatus = insertStudent(3, "Sanjula Maddurapperuma", 20, "Rajagiriya");
+    boolean|error student_4_InsertionStatus = insertStudent(4, "Ihan Lelwala", 20, "Dehiwala");
+    boolean|error student_5_InsertionStatus = insertStudent(5, "Shenal Mendis", 20, "Kottawa");
+
+    io:println("\nTesting whether records are added to the STUDENTS table\n");
+    test:assertTrue(getStudent(1) is Student, msg = "Student with id 1 not found!");
+    test:assertTrue(getStudent(2) is Student, msg = "Student with id 2 not found!");
+    test:assertTrue(getStudent(3) is Student, msg = "Student with id 3 not found!");
+    test:assertTrue(getStudent(4) is Student, msg = "Student with id 4 not found!");
+    test:assertTrue(getStudent(5) is Student, msg = "Student with id 5 not found!");
 }
 
 # Test function
@@ -49,10 +50,11 @@ function testRetrieval() {
     io:println("Running function testRetrieval");
     io:println("====================================================================");
     io:println("Retrieving a persisted student");
-    test:assertTrue(getStudent(1)?.id == 1, msg = "Student with id 1 not found!");
+    test:assertTrue(getStudent(1) is Student, msg = "Student with id 1 not found!");
     
     io:println("\nRetrieving a non-persisted student\n");
-    test:assertTrue(getStudent(8)?.id != 8, msg="Student with id 8 should have not be found!");
+
+    test:assertTrue(getStudent(8) is error, "Student with id 8 should have not be found");
 }
 
 # Test function
@@ -64,11 +66,15 @@ function testUpdation() {
 
     io:println("Running function testUpdation");
     io:println("====================================================================");
-    io:println("Updating data in the STUDENT table");
-    updateStudent(1, "Dehami Koswatte", 30, "Homagama");
+    io:println("Updating data in the STUDENTS table");
+    boolean|error updationStatus = updateStudent(1, "Dehami Koswatte", 30, "Homagama");
 
-    io:println("\nTesting whether records are updated in the STUDENT table\n");
-    test:assertTrue(getStudent(1)?.age == 30, msg = "Student with id 1 has not been updated!");
+    io:println("\nTesting whether records are updated in the STUDENTS table\n");
+    
+    Student|error student = getStudent(1);
+    if (student is Student) {
+        test:assertTrue(student?.age == 30, msg = "Student with id 1 has not been updated!");
+    }
 }
 
 # Test function
@@ -81,19 +87,23 @@ function testDeletion() {
 
     io:println("Running function testInsertion");
     io:println("====================================================================");
-    io:println("Deleting data in the STUDENT table");
-    deleteStudent(1);
+    io:println("Deleting data in the STUDENTS table");
+    boolean|error deletionStatus = deleteStudent(1);
 
-    io:println("\nTesting whether records are updated in the STUDENT table\n");
-    test:assertTrue(getStudent(1)?.id != 1, msg = "Student with id 1 has not been deleted!");
+    io:println("\nTesting whether records are updated in the STUDENTS table\n");
+
+    Student|error student = getStudent(1);
+    if (student is Student) {
+        test:assertTrue(student?.id != 1, msg = "Student with id 1 has not been deleted!");
+    }
 }
 
 # After test function
 
 function afterFunc() {
     
-    io:println("Droping the STUDENT table after function\n");
-    dropStudentTable();
+    io:println("Droping the STUDENTS table after function\n");
+    boolean|error droppedTableStatus = dropTable();
 }
 
 # After Suite Function

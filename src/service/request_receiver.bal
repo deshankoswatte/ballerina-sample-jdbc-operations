@@ -1,7 +1,7 @@
 import ballerina/http;
 import ballerina/jsonutils;
 import ballerina/io;
-import dehami/jdbc_operation;
+import jdbc_operation;
 
 http:Client clientEP = new("http://localhost:9090");
 
@@ -17,13 +17,18 @@ service studentService on new http:Listener(9090) {
     }
     resource function getAllStudents(http:Caller caller, http:Request req) {
 
-        table<record {}> tb = jdbc_operation:getAllStudents();
-
-        json retValJson = jsonutils:fromTable(tb);
-        io:println("JSON: ", retValJson.toJsonString());
-
+        table<record {}>|error allStudents = jdbc_operation:getAllStudents();
         http:Response response = new;
-        response.setTextPayload(retValJson.toJsonString());
+
+        if (allStudents is table<record {}>) {
+            json retValJson = jsonutils:fromTable(allStudents);
+            io:println("JSON: ", retValJson.toJsonString());
+
+            response.setTextPayload(retValJson.toJsonString());
+        } else {
+            response.setPayload("Error in constructing a json from student!");
+            response.statusCode = 500;
+        }
 
         error? respond = caller->respond(response);
     }
@@ -34,15 +39,19 @@ service studentService on new http:Listener(9090) {
     }
     resource function getStudent(http:Caller caller, http:Request req, int studentId) {
 
-        jdbc_operation:Student student = jdbc_operation:getStudent(studentId);
-
-        json|error retValJson = json.constructFrom(student);
-
+        jdbc_operation:Student|error student = jdbc_operation:getStudent(studentId);
         http:Response response = new;
 
-        if (retValJson is json) {
-            io:println("JSON: ", retValJson.toJsonString()); 
-            response.setTextPayload(<@untained>  retValJson.toJsonString());  
+        if (student is jdbc_operation:Student) {
+            json|error retValJson = json.constructFrom(student);
+
+            if (retValJson is json) {
+                io:println("JSON: ", retValJson.toJsonString()); 
+                response.setTextPayload(<@untained>  retValJson.toJsonString());  
+            } else {
+                response.setPayload("Error in constructing a json from student!");
+                response.statusCode = 500;
+            }
         } else {
             response.setPayload("Error in constructing a json from student!");
             response.statusCode = 500;
