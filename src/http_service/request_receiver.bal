@@ -125,7 +125,7 @@ service studentService on new http:Listener(9090) {
             boolean|error updationStatus;
 
             if (studentId is int && age is int) {
-                updationStatus = jdbc_operation:insertStudent(studentId, fullName, age, address);
+                updationStatus = jdbc_operation:updateStudent(studentId, fullName, age, address);
 
                 if (updationStatus is boolean && updationStatus == true) {
                     response.setPayload("Student updated successfully!");
