@@ -1,0 +1,149 @@
+{
+	"info": {
+		"_postman_id": "5eced52e-96a1-4cd1-9900-d00e4a7a0301",
+		"name": "student",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "delete/student",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9090/student/deleteStudent/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"student",
+						"deleteStudent",
+						"1"
+					]
+				},
+				"description": "Delete a student based on the provided student id."
+			},
+			"response": []
+		},
+		{
+			"name": "get/student",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9090/student/getStudent/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"student",
+						"getStudent",
+						"3"
+					]
+				},
+				"description": "Extract a student using a specified student id."
+			},
+			"response": []
+		},
+		{
+			"name": "get/allStudents",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9090/student/getAllStudents",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"student",
+						"getAllStudents"
+					]
+				},
+				"description": "Extract all the students from the database."
+			},
+			"response": []
+		},
+		{
+			"name": "post/student",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"student\": {\n        \"id\": \"1\",\n        \"fullName\": \"Dehami Koswatte\",\n        \"age\": \"23\",\n        \"address\": \"Florida\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9090/student/insertStudent",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"student",
+						"insertStudent"
+					]
+				},
+				"description": "Insert a student into the database."
+			},
+			"response": []
+		},
+		{
+			"name": "put/student",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"student\": {\n        \"id\": \"1\",\n        \"fullName\": \"Dehami Koswatte\",\n        \"age\": \"23\",\n        \"address\": \"Sri-Lanka\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:9090/student/updateStudent",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"student",
+						"updateStudent"
+					]
+				},
+				"description": "Update an existing student in the database."
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

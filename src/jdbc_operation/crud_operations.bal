@@ -55,7 +55,7 @@ public function createTable() returns @tainted boolean|error{
     // Create the student table.
     var dbResult = testDB->update("CREATE TABLE STUDENTS (id INTEGER, fullname VARCHAR(50), age INTEGER, address VARCHAR(100), PRIMARY KEY (id))");
     // Check status of the table creation.
-    error|boolean dbStatus = processUpdate(dbResult, "Create STUDENT table");
+    error|boolean dbStatus = processUpdate(dbResult, "Create STUDENTS table");
 
     return dbStatus;
 }
@@ -189,7 +189,7 @@ function processUpdate(jdbc:UpdateResult|jdbc:Error returned, string message) re
         io:println(message, " status: ", returned.updatedRowCount);
         return true;
     } else {
-        io:println(message, " failes: " + <string>returned.detail()?.message);
+        io:println(message, " failed: " + <string>returned.detail()?.message);
         return error(message + " failed: " + <string>returned.detail()?.message);
     }
 }
