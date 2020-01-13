@@ -1,4 +1,4 @@
-# JDBC_Operation Module Overview
+# Manage_Students Module Overview
 _**Exposes database functions**_ to `http_service` module.
 
 ## Methods Overview and Description

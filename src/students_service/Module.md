@@ -1,4 +1,4 @@
-# HTTP_Service Module Overview
+# Student_Service Module Overview
 _**Exposes database functions**_ as _API endpoints_ using a ballerina service.
 
 ## Endpoint Overview and Description
