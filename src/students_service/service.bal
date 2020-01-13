@@ -2,12 +2,15 @@ import ballerina/http;
 import ballerina/jsonutils;
 import ballerina/io;
 import ballerina/lang.'int as ints;
-import jdbc_operation;
+import manage_students;
 
 http:Client clientEP = new("http://localhost:9090");
 
 @http:ServiceConfig {
-    basePath: "/student"
+    basePath: "/student",
+    cors: {
+        allowOrigins: ["*"]
+    }
 }
 
 service studentService on new http:Listener(9090) {
@@ -18,7 +21,7 @@ service studentService on new http:Listener(9090) {
     }
     resource function getAllStudents(http:Caller caller, http:Request req) {
 
-        table<record {}>|error allStudents = jdbc_operation:getAllStudents();
+        table<record {}>|error allStudents = manage_students:getAllStudents();
         http:Response response = new;
 
         if (allStudents is table<record {}>) {
@@ -41,10 +44,10 @@ service studentService on new http:Listener(9090) {
     }
     resource function getStudent(http:Caller caller, http:Request req, int studentId) {
 
-        jdbc_operation:Student|error student = jdbc_operation:getStudent(studentId);
+        manage_students:Student|error student = manage_students:getStudent(studentId);
         http:Response response = new;
 
-        if (student is jdbc_operation:Student) {
+        if (student is manage_students:Student) {
             json|error retValJson = json.constructFrom(student);
 
             if (retValJson is json) {
@@ -71,19 +74,31 @@ service studentService on new http:Listener(9090) {
                                         request) {
         
         http:Response response = new;
-        var jsonPaylon = request.getJsonPayload();
+        
+        // Replace the map with the below commented if the request is json.
+        // var jsonPayload = request.getJsonPayload();
 
-        if (jsonPaylon is json) {
+        // if (jsonPayload is json) {
 
-            int|error studentId = ints:fromString(jsonPaylon.student.id.toString());
-            string fullName = jsonPaylon.student.fullName.toString();
-            int|error age = ints:fromString(jsonPaylon.student.age.toString());
-            string address = jsonPaylon.student.address.toString();
+            // int|error studentId = ints:fromString(jsonPayload.student.id.toString());
+            // string fullName = jsonPayload.student.fullName.toString();
+            // int|error age = ints:fromString(jsonPayload.student.age.toString());
+            // string address = jsonPayload.student.address.toString();
+
+        // }    
+
+        var data = request.getFormParams();
+        if (data is map<string>) {
+
+            int|error studentId = ints:fromString(data.get("studentId"));
+            string fullName = data.get("fullName");
+            int|error age = ints:fromString(data.get("age"));
+            string address = data.get("address");
 
             boolean|error insertionStatus;
 
             if (studentId is int && age is int) {
-                insertionStatus = jdbc_operation:insertStudent(studentId, fullName, age, address);
+                insertionStatus = manage_students:insertStudent(studentId, fullName, age, address);
 
                 if (insertionStatus is boolean && insertionStatus == true) {
                     response.setPayload("Student inserted successfully!");
@@ -113,19 +128,31 @@ service studentService on new http:Listener(9090) {
                                         request) {
                                             
         http:Response response = new;
-        var jsonPaylon = request.getJsonPayload();
 
-        if (jsonPaylon is json) {
+        // Replace the map with the below commented if the request is json.
+        // var jsonPayload = request.getJsonPayload();
 
-            int|error studentId = ints:fromString(jsonPaylon.student.id.toString());
-            string fullName = jsonPaylon.student.fullName.toString();
-            int|error age = ints:fromString(jsonPaylon.student.age.toString());
-            string address = jsonPaylon.student.address.toString();
+        // if (jsonPayload is json) {
+
+            // int|error studentId = ints:fromString(jsonPayload.student.id.toString());
+            // string fullName = jsonPayload.student.fullName.toString();
+            // int|error age = ints:fromString(jsonPayload.student.age.toString());
+            // string address = jsonPayload.student.address.toString();
+
+        // }    
+
+        var data = request.getFormParams();
+        if (data is map<string>) {
+
+            int|error studentId = ints:fromString(data.get("studentId"));
+            string fullName = data.get("fullName");
+            int|error age = ints:fromString(data.get("age"));
+            string address = data.get("address");
 
             boolean|error updationStatus;
 
             if (studentId is int && age is int) {
-                updationStatus = jdbc_operation:updateStudent(studentId, fullName, age, address);
+                updationStatus = manage_students:updateStudent(studentId, fullName, age, address);
 
                 if (updationStatus is boolean && updationStatus == true) {
                     response.setPayload("Student updated successfully!");
@@ -153,7 +180,7 @@ service studentService on new http:Listener(9090) {
     }
     resource function deleteStudent(http:Caller caller, http:Request req, int studentId) {
 
-        boolean|error status = jdbc_operation:deleteStudent(studentId);
+        boolean|error status = manage_students:deleteStudent(studentId);
         http:Response response = new;
 
         if (status is boolean && status == true) {

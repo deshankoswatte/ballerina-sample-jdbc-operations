@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<body>
+
+		<h2>Student Registration Service</h2>
+
+		<form action="http://localhost:9090/student/insertStudent" method="post">
+
+			Id:<br>
+			<input type="text" name="studentId" id="studentId" value="">
+			<br>
+
+			Fullname:<br>
+			<input type="text" name="fullName" id="fullName" value="">
+			<br>
+
+			Age:<br>
+			<input type="text" name="age" id="age" value="">
+			<br>
+
+			Address:<br>
+			<input type="text" name="address" id="address" value="">
+			<br><br>
+			<input type="submit" value="Submit">
+		</form> 
+
+		<p>If you click the "Submit" button, the form-data will be sent to a ballerina backend service to be persisted</p>
+
+		<!-- <script>
+
+			function myFunction() {
+				var id = document.getElementById("studentId").value;
+				var fullName = document.getElementById("fullName").value;
+				var age = document.getElementById("age").value;
+				var address = document.getElementById("address").value;
+
+				document.write(fullName + age + address);
+
+				var studentObj = {"student": { "id": id, "fullName": fullName, "age": age, "address": address }};
+
+				
+				var xhr = new XMLHttpRequest();
+				xhr.open("POST", "http://localhost:9090/student/insertStudent" , true);
+				xhr.setRequestHeader('Content-Type', 'application/json');
+				xhr.send(JSON.stringify(
+					studentObj
+				));
+			}
+
+		</script> -->
+
+	</body>
+</html>

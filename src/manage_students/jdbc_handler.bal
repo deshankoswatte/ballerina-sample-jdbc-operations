@@ -3,33 +3,19 @@ import ballerinax/java.jdbc;
 
 // JDBC Client for MySQL database. This client can be used with any JDBC
 // supported database by providing the corresponding JDBC URL.
-// jdbc:Client testDB = new ({
-//    url: "jdbc:mysql://localhost:3306/demodb",
-//    username: "root",
-//    password: "password",
-//    dbOptions: {useSSL: false}
-// });
-
-// JDBC Client for H2 database.
 jdbc:Client testDB = new ({
-    url: "jdbc:h2:file:./db_files/demodb",
-    username: "test",
-    password: "test"
+   url: "jdbc:mysql://localhost:3306/demodb",
+   username: "user",
+   password: "password",
+   dbOptions: {useSSL: false}
 });
 
-# 
-# Blueprint for the Student record.
-#
-# + id       - id Parameter: Id of the student. 
-# + fullName - fullName Parameter: Fullname of the student. 
-# + age      - age Parameter: Age of the student.
-# + address  - address Parameter: Address of the student.
-public type Student record {
-    int id?;
-    string fullName?;
-    int age?;
-    string address?;
-};
+// JDBC Client for H2 database.
+// jdbc:Client testDB = new ({
+//     url: "jdbc:h2:file:./db_files/demodb",
+//     username: "test",
+//     password: "test"
+// });
 
 # 
 # Main function to be executed, helps in create a 
