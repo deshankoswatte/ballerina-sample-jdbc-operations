@@ -1,5 +1,5 @@
 # Manage_Students Module Overview
-_**Exposes database functions**_ to `http_service` module.
+_**Exposes database functions**_ to `student_service` module.
 
 ## Methods Overview and Description
 Contains the following methods used for **crud operations**: 
@@ -24,4 +24,4 @@ Contains the following methods used for **crud operations**:
     - Execute `createTable()` which is the initial function.
     
 ## Notes    
-- Uses the default h2 database configurations. If you want to use MySQL instead then uncomment the configurations for MySQL in `crud_operations.bal` copy the MySQL JDBC driver to the `BALLERINA_HOME/bre/lib` and finally comment out the configurations for h2 database.
+- Uses the default h2 database configurations. If you want to use MySQL instead then uncomment the configurations for MySQL in `jdbc_handler.bal` copy the MySQL JDBC driver to the `BALLERINA_HOME/bre/lib` and finally comment out the configurations for h2 database.
