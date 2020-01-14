@@ -1,53 +1,59 @@
 <!DOCTYPE html>
 <html>
-	<body>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type" />
+    <meta content="utf-8" http-equiv="encoding" />
+  </head>
+  <body>
+    <script lang="javascript">
 
-		<h2>Student Registration Service</h2>
+      function postData() {
 
-		<form action="http://localhost:9090/student/insertStudent" method="post">
+      	var student = {};
+      	student.id = document.getElementById("studentId").value;
+      	student.fullName = document.getElementById("fullName").value;
+      	student.age = document.getElementById("age").value;
+      	student.address = document.getElementById("address").value;
 
-			Id:<br>
-			<input type="text" name="studentId" id="studentId" value="">
-			<br>
+      	var studentObj = { student };
 
-			Fullname:<br>
-			<input type="text" name="fullName" id="fullName" value="">
-			<br>
+      	console.log(JSON.stringify(student));
 
-			Age:<br>
-			<input type="text" name="age" id="age" value="">
-			<br>
+      	var xhttp = new XMLHttpRequest();
+      	xhttp.onreadystatechange = function() {
+      		document.getElementById("response").innerHTML = this.responseText;
+      	};
+      	xhttp.open("POST", "http://localhost:9090/student/insertStudent" , true);
+      	xhttp.send(JSON.stringify(studentObj));
+      }
+    </script>
 
-			Address:<br>
-			<input type="text" name="address" id="address" value="">
-			<br><br>
-			<input type="submit" value="Submit">
-		</form> 
+    <h2>Student Registration Service</h2>
 
-		<p>If you click the "Submit" button, the form-data will be sent to a ballerina backend service to be persisted</p>
+    <form>
+      Id:<br />
+      <input type="text" name="studentId" id="studentId" />
+      <br />
 
-		<!-- <script>
+      Fullname:<br />
+      <input type="text" name="fullName" id="fullName" />
+      <br />
 
-			function myFunction() {
-				var id = document.getElementById("studentId").value;
-				var fullName = document.getElementById("fullName").value;
-				var age = document.getElementById("age").value;
-				var address = document.getElementById("address").value;
+      Age:<br />
+      <input type="text" name="age" id="age" />
+      <br />
 
-				document.write(fullName + age + address);
+      Address:<br />
+      <input type="text" name="address" id="address" />
+      <br /><br />
+      <input type="button" value="Submit" onclick="postData()" />
+    </form>
 
-				var studentObj = {"student": { "id": id, "fullName": fullName, "age": age, "address": address }};
+    <p>
+      If you click the "Submit" button, the form-data will be sent to a
+      ballerina backend service to be persisted
+    </p>
 
-				
-				var xhr = new XMLHttpRequest();
-				xhr.open("POST", "http://localhost:9090/student/insertStudent" , true);
-				xhr.setRequestHeader('Content-Type', 'application/json');
-				xhr.send(JSON.stringify(
-					studentObj
-				));
-			}
-
-		</script> -->
-
-	</body>
+    <label id="response"></label>
+  </body>
 </html>

@@ -75,25 +75,25 @@ service studentService on new http:Listener(9090) {
         
         http:Response response = new;
         
-        // Replace the map with the below commented if the request is json.
-        // var jsonPayload = request.getJsonPayload();
+        // Replace the jsonPayload with the below commented if the request is from forms.
 
-        // if (jsonPayload is json) {
+        // var data = request.getFormParams();
+        // if (data is map<string>) {
 
-            // int|error studentId = ints:fromString(jsonPayload.student.id.toString());
-            // string fullName = jsonPayload.student.fullName.toString();
-            // int|error age = ints:fromString(jsonPayload.student.age.toString());
-            // string address = jsonPayload.student.address.toString();
-
+        //     int|error studentId = ints:fromString(data.get("studentId"));
+        //     string fullName = data.get("fullName");
+        //     int|error age = ints:fromString(data.get("age"));
+        //     string address = data.get("address");   
         // }    
 
-        var data = request.getFormParams();
-        if (data is map<string>) {
+        var jsonPayload = request.getJsonPayload();
 
-            int|error studentId = ints:fromString(data.get("studentId"));
-            string fullName = data.get("fullName");
-            int|error age = ints:fromString(data.get("age"));
-            string address = data.get("address");
+        if (jsonPayload is json) {
+
+            int|error studentId = ints:fromString(jsonPayload.student.id.toString());
+            string fullName = jsonPayload.student.fullName.toString();
+            int|error age = ints:fromString(jsonPayload.student.age.toString());
+            string address = jsonPayload.student.address.toString();
 
             boolean|error insertionStatus;
 
@@ -129,25 +129,25 @@ service studentService on new http:Listener(9090) {
                                             
         http:Response response = new;
 
-        // Replace the map with the below commented if the request is json.
-        // var jsonPayload = request.getJsonPayload();
+        // Replace the jsonPayload with the below commented if the request is from forms.
 
-        // if (jsonPayload is json) {
+        // var data = request.getFormParams();
+        // if (data is map<string>) {
 
-            // int|error studentId = ints:fromString(jsonPayload.student.id.toString());
-            // string fullName = jsonPayload.student.fullName.toString();
-            // int|error age = ints:fromString(jsonPayload.student.age.toString());
-            // string address = jsonPayload.student.address.toString();
+        //     int|error studentId = ints:fromString(data.get("studentId"));
+        //     string fullName = data.get("fullName");
+        //     int|error age = ints:fromString(data.get("age"));
+        //     string address = data.get("address");   
+        // }
 
-        // }    
+        var jsonPayload = request.getJsonPayload();
 
-        var data = request.getFormParams();
-        if (data is map<string>) {
+        if (jsonPayload is json) {
 
-            int|error studentId = ints:fromString(data.get("studentId"));
-            string fullName = data.get("fullName");
-            int|error age = ints:fromString(data.get("age"));
-            string address = data.get("address");
+            int|error studentId = ints:fromString(jsonPayload.student.id.toString());
+            string fullName = jsonPayload.student.fullName.toString();
+            int|error age = ints:fromString(jsonPayload.student.age.toString());
+            string address = jsonPayload.student.address.toString();
 
             boolean|error updationStatus;
 
