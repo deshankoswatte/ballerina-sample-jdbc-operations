@@ -29,10 +29,10 @@ service studentService on new http:Listener(9090) {
             io:println("JSON: ", retValJson.toJsonString());
 
             response.setTextPayload(retValJson.toJsonString());
-            response.statusCode = 200;
+            response.statusCode = http:STATUS_OK;
         } else {
             response.setPayload("Error in constructing a json from student!");
-            response.statusCode = 500;
+            response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
         }
 
         error? respond = caller->respond(response);
@@ -53,14 +53,14 @@ service studentService on new http:Listener(9090) {
             if (retValJson is json) {
                 io:println("JSON: ", retValJson.toJsonString()); 
                 response.setTextPayload(<@untained>  retValJson.toJsonString()); 
-                response.statusCode = 200; 
+                response.statusCode = http:STATUS_OK; 
             } else {
                 response.setPayload("Error in constructing a json from student!");
-                response.statusCode = 500;
+                response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
             }
         } else {
             response.setPayload("Error in constructing a json from student!");
-            response.statusCode = 500;
+            response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
         }
 
         error? respond = caller->respond(response);
@@ -102,18 +102,18 @@ service studentService on new http:Listener(9090) {
 
                 if (insertionStatus is boolean && insertionStatus == true) {
                     response.setPayload("Student inserted successfully!");
-                    response.statusCode = 200;
+                    response.statusCode = http:STATUS_OK;
                 } else {
                     response.setPayload("Student insertion failed!");
-                    response.statusCode = 500;
+                    response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
                 }
             } else {
                 response.setPayload("Invalid inputs!");
-                response.statusCode = 500;
+                response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
             }
             
         } else {
-            response.statusCode = 400;
+            response.statusCode = http:STATUS_NOT_ACCEPTABLE;
             response.setPayload("Invalid payload received");
         }
         
@@ -156,18 +156,18 @@ service studentService on new http:Listener(9090) {
 
                 if (updationStatus is boolean && updationStatus == true) {
                     response.setPayload("Student updated successfully!");
-                    response.statusCode = 200;
+                    response.statusCode = http:STATUS_OK;
                 } else {
                     response.setPayload("Student updation failed!");
-                    response.statusCode = 500;
+                    response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
                 }
             } else {
                 response.setPayload("Invalid inputs!");
-                response.statusCode = 500;
+                response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
             }
             
         } else {
-            response.statusCode = 400;
+            response.statusCode = http:STATUS_NOT_ACCEPTABLE;
             response.setPayload("Invalid payload received");
         }
         
@@ -185,10 +185,10 @@ service studentService on new http:Listener(9090) {
 
         if (status is boolean && status == true) {
             response.setPayload("Student deleted successfully!");
-            response.statusCode = 200;
+            response.statusCode = http:STATUS_OK;
         } else {
             response.setPayload("Could not delete the specified student!");
-            response.statusCode = 500;
+            response.statusCode = http:STATUS_INTERNAL_SERVER_ERROR;
         }
 
         error? respond = caller->respond(response);
