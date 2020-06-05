@@ -1,4 +1,4 @@
-# ballerina-boilerplate-jdbc-operations
+# ballerina-sample-jdbc-operations
 
 ## Table of Contents
 
@@ -10,7 +10,7 @@
 
 ## About the project
 
-Ballerina boilerplate code for database crud operations exposed as API endpoints using a ballerina service.
+ Ballerina code sample for database related operations with JDBC which are exposed as API endpoints using a ballerina service. Underlying scenaio is a student management system where you can add edit and delete them. You can find the UI for the service at https://github.com/deshankoswatte/student-data-collector-frontend.
 
 ## Prerequisites
 
@@ -19,7 +19,7 @@ You should have installed:
 
 ## Try out the project
 
-- Clone the repository to a place of your preference using the command `git clone https://github.com/deshankoswatte/ballerina-boilerplate-jdbc-operations.git`.
+- Clone the repository to a place of your preference using the command `git clone https://github.com/deshankoswatte/ballerina-sample-jdbc-operations.git`.
 - Open the cloned repository folder.
 - Run the program using the command using `jdbc_operations.activate.sh` on the root folder.
 - Import the postman collection `student.postman_collection.json` located at `src/students_service/resources/student.postman_collection.json` and try out the requests by changing the parameters or you can try it out with the frontend located at `https://github.com/deshankoswatte/student-data-collector-frontend`.
