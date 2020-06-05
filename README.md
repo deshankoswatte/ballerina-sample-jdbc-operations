@@ -10,7 +10,7 @@
 
 ## About the project
 
- Ballerina code sample for database related operations with JDBC which are exposed as API endpoints using a ballerina service. Underlying scenaio is a student management system where you can add edit and delete them. You can find the UI for the service at https://github.com/deshankoswatte/student-data-collector-frontend.
+ Ballerina code sample for database related operations with JDBC which are exposed as API endpoints using a ballerina service. Underlying scenaio is a student management system where you can add edit and delete them. You can find the UI for the service at https://github.com/deshankoswatte/student-data-collector-frontend. Module overviews for the two modules `manage_students` and `students_service` can be found at the relevant module's `Module.md` file, you can use it to gain a brief idea about the purpose of each module.
 
 ## Prerequisites
 
